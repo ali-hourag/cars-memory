@@ -17,6 +17,19 @@ body {
 body {
     background-image: url("assets/bmw.jpg");
     background-size: cover;
+    font-family: 'Speed-Font', sans-serif;
+}
+
+@font-face {
+    font-family: Speed-Font;
+    src: url(assets/fonts/high-speed.ttf);
+
+}
+
+.game-settings {}
+
+.choice-uname {
+    text-align: center;
 }
 
 .game-settings input {
