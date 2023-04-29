@@ -75,6 +75,7 @@ SALE CON EL COLOR DE DEFECTO*/
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     min-height: 300px;
+    aspect-ratio: 2/2;
 }
 
 .modes-container fieldset {
@@ -83,9 +84,6 @@ SALE CON EL COLOR DE DEFECTO*/
     align-self: center;
 }
 
-.label-game-mode {
-    border-radius: 15px;
-}
 
 .input-game-mode {
     width: 0;
@@ -95,15 +93,21 @@ SALE CON EL COLOR DE DEFECTO*/
 
 .input-game-mode:checked+label {
     box-shadow: 0 0 0 4px darkgrey;
+    border: 1px solid darkgray;
 }
 
 .label-game-mode {
-    border: 1px solid black;
     display: block;
-    width: 100px;
-    height: 100px;
+    width: 6.25rem;
+    border: 1px solid black;
+    border-radius: 15px;
+    aspect-ratio: 2/2;
     background-size: cover;
     text-align: center;
+}
+
+.label-game-mode:hover {
+    cursor: pointer;
 }
 
 .mode1 {
@@ -160,7 +164,66 @@ aimed to style for desktop or tablets devices.*/
         background-size: cover;
     }
 
+    /*-----Responsive for the first section-----*/
+    .choice-uname-text {
+        text-align: center;
+        font-size: 2rem;
+        margin-top: 2rem;
+    }
+
+    .input-username {
+        width: 25rem;
+        height: 4rem;
+        background-color: transparent;
+        border: 2px solid black;
+        border-radius: 15px;
+        padding: 5px;
+        font-size: 1.5rem;
+        margin-top: 1rem;
+        justify-self: center;
+        text-align: center;
+    }
+
+    .choice-game-mode {
+        font-size: 1.5rem;
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .modes-container {
+        max-width: 420px;
+        min-width: 350px;
+        justify-self: center;
+    }
+
+    .label-game-mode {
+        display: block;
+        width: 8rem;
+        border: 1px solid black;
+        border-radius: 15px;
+        aspect-ratio: 2/2;
+        background-size: cover;
+        text-align: center;
+        font-size: 1rem;
+        padding: 4px;
+    }
+
+    .users-score {
+        margin: 3rem;
+        font-size: 1.5rem;
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    .start-game {
+        font-size: 1.5rem;
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
     .game-settings label {
         border: 1px solid black;
     }
+
+    /*-----Rersponsive for the second section-----*/
 }
