@@ -17,19 +17,137 @@ body {
 body {
     background-image: url("assets/bmw.jpg");
     background-size: cover;
+    font-family: 'Speed-Font', sans-serif;
 }
 
-.game-settings input {
+@font-face {
+    font-family: Speed-Font;
+    src: url(assets/fonts/high-speed.ttf);
+
+}
+
+/*-----Styles for game settings section-----*/
+.game-settings {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.choice-uname-text {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+.input-username {
+    width: 16rem;
+    height: 2.5rem;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    justify-self: center;
+    text-align: center;
+}
+
+.input-username::placeholder {
+    color: darkgray;
+}
+
+/*Arreglar outline for safari
+SALE CON EL COLOR DE DEFECTO*/
+.input-username:focus {
+    outline-color: darkgray;
+}
+
+
+
+
+.choice-game-mode {
+    font-size: 1rem;
+    text-align: center;
+}
+
+.modes-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    min-height: 300px;
+}
+
+.modes-container fieldset {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
+
+.label-game-mode {
+    border-radius: 15px;
+}
+
+.input-game-mode {
     width: 0;
     height: 0;
     opacity: 0;
 }
 
-.game-settings label {
+.input-game-mode:checked+label {
+    box-shadow: 0 0 0 4px darkgrey;
+}
+
+.label-game-mode {
     border: 1px solid black;
     display: block;
     width: 100px;
     height: 100px;
+    background-size: cover;
+    text-align: center;
+}
+
+.mode1 {
+    background-image: url("assets/easy-mode.png");
+}
+
+.mode2 {
+    background-image: url("assets/hard-mode.png");
+}
+
+.mode3 {
+    background-image: url("assets/no-mistakes-mode.png");
+    font-size: .8rem;
+}
+
+.mode4 {
+    background-image: url("assets/pro-mode.png");
+    color: antiquewhite;
+}
+
+.users-score {
+    justify-self: center;
+    margin: 3rem;
+    font-size: 1rem;
+    background-color: rgba(210, 215, 211, .3);
+    padding: 1rem;
+    border-radius: 20px;
+    color: white;
+}
+
+.users-score:hover,
+.start-game:hover {
+    cursor: pointer;
+    background-color: rgba(210, 215, 211, .7);
+}
+
+.start-game {
+    justify-self: center;
+    font-size: 1rem;
+    background-color: rgba(210, 215, 211, .3);
+    padding: 1rem;
+    border-radius: 20px;
+    color: white;
+    opacity: 1;
 }
 
 @media screen and (min-width: 800px) {
@@ -39,6 +157,6 @@ body {
     }
 
     .game-settings label {
-        border: 5px solid yellow;
+        border: 1px solid black;
     }
 }

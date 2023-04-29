@@ -16,25 +16,36 @@
     <main>
         <!--Username section-->
         <section class="game-settings">
-            <h2>Chose a user name</h2>
-            <input type="text" id="username" placeholder="user name">
+            <h2 class="choice-uname-text">CHOSE A USERNAME</h2>
+            <input type="text" id="username" placeholder="user name" class="input-username">
+
+            <h2 class="choice-game-mode">SELECT A GAME MODE</h2>
             <!--Game modes-->
-            <input id="easy-mode" type="radio" name="game-modes" value="easy-mode">
-            <label for="easy-mode"></label>
-
-            <input id="hard-mode" type="radio" name="game-modes" value="hard-mode">
-            <label for="hard-mode"></label>
-
-            <input id="no-mistakes-mode" type="radio" name="game-modes" value="no-mistakes-mode">
-            <label for="no-mistakes-mode"></label>
-
-            <input id="pro-mode" type="radio" name="game-modes" value="pro-mode">
-            <label for="pro-mode"></label>
-
+            <form class="modes-container">
+                <fieldset>
+                    <input id="easy-mode" type="radio" name="game-modes" value="easy-mode" class="input-game-mode">
+                    <label for="easy-mode" class="label-game-mode mode1">EASY</label>
+                </fieldset>
+                <fieldset>
+                    <input id="hard-mode" type="radio" name="game-modes" value="hard-mode" class="input-game-mode">
+                    <label for="hard-mode" class="label-game-mode mode2">HARD</label>
+                </fieldset>
+                <fieldset>
+                    <input id="no-mistakes-mode" type="radio" name="game-modes" value="no-mistakes-mode"
+                        class="input-game-mode">
+                    <label for="no-mistakes-mode" class="label-game-mode mode3">NO MISTAKES</label>
+                </fieldset>
+                <fieldset>
+                    <input id="pro-mode" type="radio" name="game-modes" value="pro-mode" class="input-game-mode">
+                    <label for="pro-mode" class="label-game-mode mode4">PRO</label>
+                </fieldset>
+            </form>
+            <button class="users-score">SHOW USERS SCORES</button>
+            <button class="start-game">START</button>
         </section>
         <!--User scores section-->
-        <section>
-            <h3>User Scores</h3>
+        <section>ya
+
         </section>
     </main>
 </body>
