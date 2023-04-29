@@ -39,6 +39,7 @@ body {
     margin-top: 1rem;
 }
 
+/*Styles for username input*/
 .input-username {
     width: 16rem;
     height: 2.5rem;
@@ -63,8 +64,7 @@ SALE CON EL COLOR DE DEFECTO*/
 }
 
 
-
-
+/*Styles for game mode selection*/
 .choice-game-mode {
     font-size: 1rem;
     text-align: center;
@@ -124,6 +124,7 @@ SALE CON EL COLOR DE DEFECTO*/
     color: antiquewhite;
 }
 
+/*Styles for bottom buttons*/
 .users-score {
     justify-self: center;
     margin: 3rem;
@@ -150,6 +151,9 @@ SALE CON EL COLOR DE DEFECTO*/
     opacity: 1;
 }
 
+/*Styles for a responsive website.
+It is mobile first, so this mequia query is 
+aimed to style for desktop or tablets devices.*/
 @media screen and (min-width: 800px) {
     body {
         background-image: url("assets/bmwD.jpg");
