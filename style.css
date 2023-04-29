@@ -215,7 +215,9 @@ SALE CON EL COLOR DE DEFECTO*/
 }
 
 /*-----Styles for cards game section-----*/
-
+.cards-game-section {
+    display: none;
+}
 
 
 /*Styles for a responsive website.
