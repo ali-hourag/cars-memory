@@ -24,6 +24,10 @@ button {
     font-family: 'Speed-Font', sans-serif;
 }
 
+input {
+    font-family: 'Speed-Font', sans-serif;
+}
+
 @font-face {
     font-family: Speed-Font;
     src: url(assets/fonts/high-speed.ttf);
@@ -66,7 +70,7 @@ main {
     width: 16rem;
     height: 2.5rem;
     background-color: transparent;
-    border: 1px solid black;
+    border: 1px solid white;
     border-radius: 10px;
     padding: 5px;
     font-size: 1rem;
@@ -123,7 +127,7 @@ SALE CON EL COLOR DE DEFECTO*/
 .label-game-mode {
     display: block;
     width: 6.25rem;
-    border: 1px solid black;
+    border: 1px solid white;
     border-radius: 15px;
     aspect-ratio: 2/2;
     background-size: cover;
@@ -417,4 +421,9 @@ aimed to style for desktop or tablets devices.*/
     .game-completed-section p {
         font-size: 1.5rem;
     }
+}
+
+
+.section-display {
+    display: grid;
 }
