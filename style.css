@@ -20,24 +20,45 @@ body {
     font-family: 'Speed-Font', sans-serif;
 }
 
+button {
+    font-family: 'Speed-Font', sans-serif;
+}
+
 @font-face {
     font-family: Speed-Font;
     src: url(assets/fonts/high-speed.ttf);
 
 }
 
-/*-----Styles for game settings section-----*/
+main {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+/*----------Styles for game settings section----------*/
 .game-settings-section {
     display: none;
     /*Grid*/
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.bmw-logo {
+    width: 3rem;
+    aspect-ratio: 2/2;
+    justify-self: center;
 }
 
 .choice-uname-text {
-    text-align: center;
+    justify-self: center;
     font-size: 1.2rem;
-    margin-top: 1rem;
+    align-self: flex-end;
 }
 
 /*Styles for username input*/
@@ -49,13 +70,13 @@ body {
     border-radius: 10px;
     padding: 5px;
     font-size: 1rem;
-    margin-bottom: 1rem;
     justify-self: center;
+    align-self: center;
     text-align: center;
 }
 
 .input-username::placeholder {
-    color: darkgray;
+    color: #696969;
 }
 
 /*Arreglar outline for safari
@@ -68,7 +89,9 @@ SALE CON EL COLOR DE DEFECTO*/
 /*Styles for game mode selection*/
 .choice-game-mode {
     font-size: 1rem;
-    text-align: center;
+    justify-self: center;
+    align-self: end;
+    color: white;
 }
 
 .modes-container {
@@ -77,6 +100,7 @@ SALE CON EL COLOR DE DEFECTO*/
     grid-template-rows: 1fr 1fr;
     min-height: 40vh;
     aspect-ratio: 2/2;
+    justify-self: center;
 }
 
 .modes-container fieldset {
@@ -84,7 +108,6 @@ SALE CON EL COLOR DE DEFECTO*/
     justify-self: center;
     align-self: center;
 }
-
 
 .input-game-mode {
     width: 0;
@@ -130,9 +153,12 @@ SALE CON EL COLOR DE DEFECTO*/
 }
 
 /*Styles for bottom buttons*/
-.users-score {
+.users-score-btn,
+.start-game-btn,
+.back-btn,
+.cancel-btn,
+.play-again-btn {
     justify-self: center;
-    margin: 3rem;
     font-size: 1rem;
     background-color: rgba(210, 215, 211, .3);
     padding: 1rem;
@@ -140,33 +166,28 @@ SALE CON EL COLOR DE DEFECTO*/
     color: white;
 }
 
-.users-score:hover,
-.start-game:hover,
-.back-btn:hover {
+.users-score-btn:hover,
+.start-game-btn:hover,
+.back-btn:hover,
+.cancel-btn:hover,
+.play-again-btn:hover {
     cursor: pointer;
-    background-color: rgba(210, 215, 211, .7);
+    background-color: rgba(210, 215, 211, .8);
 }
 
-.start-game {
-    justify-self: center;
-    font-size: 1rem;
-    background-color: rgba(210, 215, 211, .3);
-    padding: 1rem;
-    border-radius: 20px;
-    color: white;
-}
-
-/*-----Styles for users score section-----*/
+/*----------Styles for users score section----------*/
 .users-score-section {
     display: none;
     align-items: center;
-    margin: 2rem;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .score-text {
-    margin-top: 1rem;
     color: white;
-    text-align: center;
+    justify-self: center;
+    align-self: flex-end;
     font-size: 1.3rem;
 }
 
@@ -182,13 +203,11 @@ SALE CON EL COLOR DE DEFECTO*/
     border-radius: 15px;
     color: white;
     background-color: rgba(210, 215, 211, .5);
-    margin-top: 1rem;
 }
 
 .ranking-score::-webkit-scrollbar {
     display: none;
 }
-
 
 .player-ranking {
     display: flex;
@@ -204,19 +223,109 @@ SALE CON EL COLOR DE DEFECTO*/
     width: 2rem;
 }
 
-.back-btn {
-    justify-self: center;
-    font-size: 1rem;
-    background-color: rgba(210, 215, 211, .3);
-    padding: 1rem;
-    border-radius: 20px;
-    color: white;
-    margin: 2rem;
-}
 
-/*-----Styles for cards game section-----*/
+/*----------Styles for cards game section - 18 CARDS----------*/
 .cards-game-section {
     display: none;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.guess-card-text {
+    justify-self: center;
+    font-size: 1.1rem;
+    align-self: flex-end;
+}
+
+.timer-cards {
+    justify-self: center;
+    font-size: 1.3rem;
+    color: lightyellow;
+}
+
+.cards-container {
+    align-self: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: .5rem;
+    border: 4px solid darkgray;
+    padding: 1rem;
+    border-radius: 20px;
+    background-color: rgba(210, 215, 211, .3);
+    perspective: 1000px;
+    /*Child elements have the perspective*/
+}
+
+
+.flip-card {
+    position: relative;
+    width: 5rem;
+    height: 5rem;
+    transition: transform 1s;
+    transform-style: preserve-3d;
+}
+
+.image-card,
+.backface-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 5px;
+}
+
+.backface-card {
+    background-color: lightcoral;
+}
+
+.image-card {
+    transform: rotateX(-180deg);
+}
+
+.cancel-btn {
+    align-self: flex-start;
+}
+
+/*-----Styles for cards game section - 12 CARDS-----*/
+/*-----APPLIED TO THE DIV OF CARDS-CONTAINER-----*/
+.cards-container-12 {
+    gap: 1.5rem;
+}
+
+/*----------STYLES FOR THE LAST SECTION OF COMPLETION----------*/
+.game-completed-section {
+    display: none;
+    color: yellow;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.game-completed-section .ranking-score {
+    color: black;
+    background-color: rgba(210, 215, 211, .8);
+}
+
+.game-completed-section img {
+    width: 4rem;
+    aspect-ratio: 2/2;
+    justify-self: center;
+}
+
+.game-completed-section p {
+    font-size: .9rem;
+    justify-self: center;
+    text-decoration: underline;
+}
+
+.play-again-btn {
+    color: yellow;
+    background-color: rgba(210, 215, 211, .6);
 }
 
 
@@ -226,106 +335,86 @@ aimed to style for desktop or tablets devices.*/
 @media screen and (min-width: 800px) {
     body {
         background-image: url("assets/img/bmwD.jpg");
-        background-size: cover;
     }
 
-    /*-----Responsive for the first section-----*/
-    main {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
-
+    /*----------Responsive for the first section----------*/
+    /*Last section as well since the structure is similar*/
     .game-settings-section {
         flex: 0 0 65%;
         justify-content: right;
     }
 
+    .bmw-logo {
+        width: 5rem;
+    }
+
     .choice-uname-text {
-        text-align: center;
         font-size: 2rem;
-        margin-top: 2rem;
     }
 
     .input-username {
         width: 25rem;
         height: 4rem;
-        background-color: transparent;
-        border: 2px solid black;
-        border-radius: 15px;
-        padding: 5px;
+        border-width: 2px;
         font-size: 1.5rem;
-        margin-top: 1rem;
-        justify-self: center;
-        text-align: center;
     }
 
     .choice-game-mode {
         font-size: 1.5rem;
-        text-align: center;
-        margin-top: 1.5rem;
-    }
-
-    .modes-container {
-        max-width: 420px;
-        min-width: 350px;
-        justify-self: center;
     }
 
     .label-game-mode {
-        display: block;
-        width: 8rem;
-        border: 1px solid black;
-        border-radius: 15px;
-        aspect-ratio: 2/2;
-        background-size: cover;
-        text-align: center;
-        font-size: 1rem;
+        width: 8.5rem;
         padding: 4px;
     }
 
-    .users-score {
-        margin: 3rem;
+    .start-game-btn,
+    .cancel-btn {
         font-size: 1.5rem;
-        padding: 1rem;
-        border-radius: 20px;
+        align-self: flex-start;
     }
 
-    .start-game {
-        font-size: 1.5rem;
-        padding: 1rem;
-        border-radius: 20px;
-    }
-
-    .game-settings label {
-        border: 1px solid black;
-    }
-
-    /*-----Rersponsive for the second section-----*/
-    .users-score,
+    /*----------Rersponsive for the second section----------*/
+    .users-score-btn,
     .back-btn {
         display: none;
     }
 
-    .start-game {
-        margin-top: 3rem;
-    }
-
     .users-score-section {
-        display: none;
-        width: 35vh;
-        margin: 0;
         flex: 0 0 35%;
-        justify-content: center;
     }
 
-    .player-ranking {
-        margin-top: 0;
+    /*----------Rersponsive for the cards game section - 18 CARDS----------*/
+    .cards-container {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 2rem;
     }
 
-    .score-text {
-        font-size: 1.3rem;
-        margin-top: 2rem;
+    .guess-card-text {
+        font-size: 2.1rem;
     }
 
+    .timer-cards {
+        font-size: 2.3rem;
+    }
+
+    .cards-container {
+        padding: 2rem;
+    }
+
+    .flip-card {
+        width: 7rem;
+        height: 7rem;
+    }
+
+    /*-----Styles for cards game section - 12 CARDS-----*/
+    /*-----APPLIED TO THE DIV OF CARDS-CONTAINER-----*/
+    .cards-container-12-desktop {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    /*----------STYLES FOR THE LAST SECTION OF COMPLETION----------*/
+    .game-completed-section p {
+        font-size: 1.5rem;
+    }
 }
