@@ -170,6 +170,8 @@ SALE CON EL COLOR DE DEFECTO*/
     color: white;
 }
 
+
+
 .users-score-btn:hover,
 .start-game-btn:hover,
 .back-btn:hover,
@@ -177,6 +179,12 @@ SALE CON EL COLOR DE DEFECTO*/
 .play-again-btn:hover {
     cursor: pointer;
     background-color: rgba(210, 215, 211, .8);
+}
+
+.start-game-btn:disabled {
+    cursor: default;
+    opacity: .7;
+    background-color: rgba(210, 215, 211, .3);
 }
 
 /*----------Styles for users score section----------*/
@@ -248,6 +256,8 @@ SALE CON EL COLOR DE DEFECTO*/
     justify-self: center;
     font-size: 1.3rem;
     color: lightyellow;
+    height: 2rem;
+    width: 2rem;
 }
 
 .cards-container {
@@ -370,6 +380,7 @@ aimed to style for desktop or tablets devices.*/
     .label-game-mode {
         width: 8.5rem;
         padding: 4px;
+        font-size: 1rem;
     }
 
     .start-game-btn,
@@ -400,6 +411,8 @@ aimed to style for desktop or tablets devices.*/
 
     .timer-cards {
         font-size: 2.3rem;
+        height: 2.5rem;
+        width: 2.5rem;
     }
 
     .cards-container {
