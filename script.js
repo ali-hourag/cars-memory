@@ -17,9 +17,41 @@
  * - CAMBIAR LA FUNCIÓN DE SETSCORE APRA HACER QUE LO VAYA ORDENANDO A MEDIDA QUE SE METE UN USUARIO, ES DECIR, QUE SE META ORDENADO YA
  * Y NO HAYA QUE IMPLEMENTAR LA FUNCIÓN DE ORDENAR. ESO SE HARÁ TRAS PASAR A LA ÚLTIMA SECCIÓN Y HAYA ACABADO DE MANERA EFECTIVA.
  * 
+ * 
+ * 
+ * 
  * -HABRÁ UN RANKING PARA CADA MODO, SI NO SE LE DA A NADA,LE AVISO QUE DE AUN MODO PARA QUE PUEDA IRLE BIEN EL RANKING
  * -SI LE DA A ALGUNO Y NO EXISTE LE DICE QUE "NO ENTRIES YET"
  * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * CHECK A MODE IS CHECKED BEFORE CLICKING THE BUTTON START
+ * 
+ * TENGO QUE AÑADIR LA PARTE DEL SET CARDGAMES QUE DEPENDE DEL MODO QUE HAYA ELEGIDO, SALE UNA DISPOSICIÓN U OTRA
+ * 
+ * 
+ * HACER QUE EL MODO ELEGIDO SE QUEDE GUARDADO EN LOCALSTORAGE CUANDO VAYAMOS A VER EL RANKING Y VOLVAMOS Y EN TODOS CASOS
+ * ASÍ COMO EL NOMBRE INTRODUCIDO
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * setUsersScore has to be called again to update when someone
+ * completes something succesfully.
+ * 
+ * 
+ * 
+ * LOS CREO UNA VEZ, LUEGO JUEGO CON DISPLAYS Y COSAS ASÍ
+ * SI ES NECESARIO TOCARLOS UN POCO Y ACTUALIZARLOS SE VUELVEN A LLAMAR.
+ * LOS ÚNICOS 2 QUE HAY QUE HACER REMOVE POR SI ENTRA INFO NUEVA SON LOS DEL SETUSERSCORE
+ * Y EL OTRO DE LAS CARTAS POR LA DISPOSICIÓN Y LAS FOTOS SI DA OTRA COSA QUE NO
+ * SE VUELVAN A CREAR!!!
  * 
  * 
  * 
@@ -37,19 +69,13 @@ function gameLoaded() {
     setGameSettings(); //prepares first section of username and mode selection
 
 
+
     const gameSS = document.querySelector(".game-settings-section");
-    const scoreBtn = document.querySelector(".users-score-btn");
-    const scoreS = document.querySelector(".users-score-section");
-
     //Show the first section of game settings.
-    gameSS.classList.toggle("section-display");
+    gameSS.classList.add("section-display");
 
-    //If the button is not showing it means, we are in a desktop device,
-    //so the second section of players ranking will be shown
-    if (getComputedStyle(scoreBtn).display === "none") {
-        scoreS.classList.toggle("section-display");
 
-    }
+
 }
 //------------------------------------------------------------------------------------------------------------------------
 /**
@@ -57,6 +83,8 @@ function gameLoaded() {
  * It sets the settings parts and shows it on the display.
  */
 function setGameSettings() {
+
+
     //It will be appended to the main element.
     const mainPage = document.querySelector("main");
 
@@ -95,13 +123,52 @@ function setGameSettings() {
     //Insert it as the first child of main
     mainPage.insertAdjacentHTML("afterbegin", htmlInserted);
 
-    //Example to see if it works properly. It will be erased of course, since this will be done by the LocalStorage
-    let usersScore = [{ Player: "Ali", Score: 67 }, { Player: "Ali1", Score: 120 }, { Player: "Ali2", Score: 34 }, { Player: "Ali3", Score: 68 }, { Player: "Ali4", Score: 57 },
-    { Player: "Ali5", Score: 110 }, { Player: "Ali6", Score: 88 }, { Player: "Ali7", Score: 340 }, { Player: "Ali8", Score: 77 }, { Player: "Ali9", Score: 65 }, { Player: "Ali10", Score: 71 },
-    { Player: "Ali11", Score: 54 }, { Player: "Ali12", Score: 52 }, { Player: "Ali13", Score: 43 }, { Player: "Ali14", Score: 18 }];
-    let usersScore1 = [{ Player: "Ali", Score: 67 }, { Player: "Ali1", Score: 120 }];
-    //Call this function giving the array of objects of the players as a parameter.
-    setUsersScore(orderArrayOfObjects(usersScore, 1));
+    //Disable start game button until a game mode is selected
+    const startBtn = document.querySelector(".start-game-btn");
+    startBtn.disabled = true;
+    //Now, we add an EventListener to the button
+    startBtn.addEventListener("click", startBtnClicked);
+
+
+    //See if I have the button to see users score, then it means I am on a mobile phone device.
+    //If that buttons is not seen, then cool, nothing to do.
+    //However, if th ebutton is shown we do have to sections from the first one to the second one.
+    const scoreBtn = document.querySelector(".users-score-btn");
+
+
+    //IF the button is not there, then it means we in a display, show both sections
+
+    if (getComputedStyle(scoreBtn).display === "none") {
+        //DESKTOP
+        setUsersScore();
+        const scoreS = document.querySelector(".users-score-section");
+        scoreS.classList.add("section-display");
+    } else {
+        //create addEventListener for the show users scores if he wants to see it
+        const showUsers = document.querySelector(".users-score-btn");
+
+        showUsers.addEventListener("click", showScoreBtnClicked);
+    }
+
+    const inputUsername = document.querySelector("#username");
+    inputUsername.addEventListener("focusout", userEntered);
+
+    const modeSelected = document.querySelectorAll(".input-game-mode");
+    modeSelected.forEach((mode) => {
+        mode.addEventListener("change", gameModeClicked)
+        if (localStorage.getItem("gameMode") !== null) {
+            //So that it keeps checked if the apge reloads
+            if (mode.getAttribute("id") === localStorage.getItem("gameMode")) {
+                mode.checked = true;
+
+                if (localStorage.getItem("username") !== null && localStorage.getItem("username").length > 2) startBtn.disabled = false;
+            }
+        }
+    })
+
+    //Enter the things from localStorage
+    if (localStorage.getItem("username") !== null) inputUsername.value = localStorage.getItem("username");
+
 
 }
 
@@ -110,37 +177,50 @@ function setGameSettings() {
 
 /**
  * This function shows the ranking of players if there is any.
- * @param receives an array of objects of the players
+ * will receive an array of objects of the players from LocalStorage
  */
-function setUsersScore(scoresArray) {
+function setUsersScore() {
+
+    //Example to see if it works properly. It will be erased of course, since this will be done by the LocalStorage
+    let usersScore = [{ Player: "Ali", Score: 67 }, { Player: "Ali1", Score: 120 }, { Player: "Ali2", Score: 34 }, { Player: "Ali3", Score: 68 }, { Player: "Ali4", Score: 57 },
+    { Player: "Ali5", Score: 110 }, { Player: "Ali6", Score: 88 }, { Player: "Ali7", Score: 340 }, { Player: "Ali8", Score: 77 }, { Player: "Ali9", Score: 65 }, { Player: "Ali10", Score: 71 },
+    { Player: "Ali11", Score: 54 }, { Player: "Ali12", Score: 52 }, { Player: "Ali13", Score: 43 }, { Player: "Ali14", Score: 18 }];
+
+    //Call this function giving the array of objects of the players as a parameter.
+    let playersArray = orderArrayOfObjects(usersScore, 1);
+
+
 
     let htmlInserted = ``;
     //It will be appended after this section as a sibling element
     const gameSS = document.querySelector(".game-settings-section");
 
+    // If this section existed before has to be erased, since we do not know
+    // from which part is coming and its text, or the page has been restarted and now it is being created
+    // from scratch. So I remove it completely
+    const sectionsPage = document.querySelectorAll("main > section");
+
+    if (sectionsPage.length > 1) {
+        if (sectionsPage[1].getAttribute("class") === "users-score-section") {
+            sectionsPage[1].remove();
+        }
+    }
+
     //If the array is empty, i.e, no one has finished successfully and there
     //are no records, then show the next part as "NO ENTRIES YET..."
-    if (scoresArray.length === 0) {
+    if (playersArray.length === 0) {
+        let message = "";
+        if (localStorage.getItem("gameMode") !== null) message = "NO ENTRIES YET...";
+        else message = "SELECT A GAME MODE";
         htmlInserted = `
         <section class="users-score-section">
             <h2 class="score-text">HIGH SCORE TABLE</h2>
             <section class="ranking-score">
-                <p>NO ENTRIES YET...</p>
+                <p>${message}</p>
             </section>
         </section>`;
         gameSS.insertAdjacentHTML("afterend", htmlInserted);
     } else {
-
-        //Borramos la sección por si existía anteriormente, ya que puede ser diferente a como la tenemos ahora mismo
-        //Y nos puede dar problemas.
-        //Select direct child of main that are sections, 
-        const sectionsPage = document.querySelectorAll("main > section");
-
-        //Nos da una lista de las secciones que tenemos en la página.
-        //Si tiene una longitud > 1, significa que esta sección fue creadad
-        //anteriormente y debemos eliminar lo que había
-        if (sectionsPage.length > 1) sectionsPage[1].remove();
-
         //Aquí abajo lo volvemos a meter.
         //La realidad es que habrá ranking diferentes y quizás tengamos la entrada primera de que
         // "NO ENTRIES YET"
@@ -163,7 +243,7 @@ function setUsersScore(scoresArray) {
         const rankingSection = document.querySelector(".ranking-score");
 
         let i = 0;
-        while (i < scoresArray.length && i < 10) {
+        while (i < playersArray.length && i < 10) {
             let imgSrc = "";
             if (i === 0) imgSrc = "gold";
             else if (i === 1) imgSrc = "silver";
@@ -172,8 +252,8 @@ function setUsersScore(scoresArray) {
             divRanking = `
             <div class="player-ranking">
                 <img src="assets/img/medals/${imgSrc}.png">
-                <p>${scoresArray[i].Player}</p>
-                <p>${scoresArray[i].Score} SECONDS</p>
+                <p>${playersArray[i].Player}</p>
+                <p>${playersArray[i].Score} SECONDS</p>
             </div>
             `;
             rankingSection.insertAdjacentHTML("beforeend", divRanking);
@@ -182,8 +262,265 @@ function setUsersScore(scoresArray) {
 
     }
 }
+//------------------------------------------------------------------------------------------------------------------------
+function setCardGame() {
+    const sectionsPage = document.querySelectorAll("main > section");
+    let insertedHTML = ``;
+    if (sectionsPage.length > 1) {
+        for (section of sectionsPage) {
+            if (section.getAttribute("class") === "cards-game-section") {
+                section.remove();
+            }
+        }
+    }
+    insertedHTML = `
+    <section class="cards-game-section">
+            <h2 class="guess-card-text">GUESS THE RIGHT CARD</h2>
+            <p class="timer-cards"></p>
+            <div class="cards-container">
+                
+            </div>
+            <button class="cancel-btn">CANCEL</button>
+
+        </section>`;
+
+    const mainPage = document.querySelector("main");
+    mainPage.insertAdjacentHTML("beforeend", insertedHTML);
+
+    const cancelBtn = document.querySelector(".cancel-btn");
+    cancelBtn.addEventListener("click", cancelBtnClicked);
 
 
+    if (["easy-mode", "no-mistakes-mode"].indexOf(localStorage.getItem("gameMode")) !== -1) {
+        createTemplateCards(12);
+    } else {
+        createTemplateCards(18);
+
+    }
+
+
+}
+//------------------------------------------------------------------------------------------------------------------------
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+//------------------------------------------------------------------------------------------------------------------------
+function createTemplateCards(cardNums) {
+    const cardsContainer = document.querySelector(".cards-container");
+    let arrayImgSrcsCards = new Array(cardNums);
+    while (arrayImgSrcsCards.includes(undefined)) {
+
+        let imgNumber = randomIntFromInterval(0, 9);
+        let imgSrc = `bmw${imgNumber}`;
+
+        if (!arrayImgSrcsCards.includes(imgSrc)) {
+            let insertedImg = 0;
+
+            while (insertedImg < 2) {
+
+                let indexOfInsertion = randomIntFromInterval(0, cardNums - 1);
+
+                if (arrayImgSrcsCards[indexOfInsertion] === undefined) {
+                    arrayImgSrcsCards[indexOfInsertion] = imgSrc;
+                    insertedImg++;
+                }
+            }
+        }
+    }
+    for (img in arrayImgSrcsCards) {
+        let insertedHTML = `
+             <div class="flip-card ${arrayImgSrcsCards[img]} img${img}">
+                 <div class="backface-card"></div>
+                 <img src="assets/img/game-mode/${arrayImgSrcsCards[img]}.png" class="image-card">
+             </div>`;
+        cardsContainer.insertAdjacentHTML("beforeend", insertedHTML);
+
+    }
+
+    const cards = document.querySelectorAll(".flip-card");
+    cards.forEach(card => {
+        card.style.transform = `rotateX(-180deg)`;
+        card.setAttribute("image-shown", "-180");
+    });
+
+    let seconds;
+    if (["easy-mode", "no-mistakes-mode"].indexOf(localStorage.getItem("gameMode")) !== -1) seconds = 3000;
+
+    else seconds = 5000;
+    let hideCards = setTimeout(() => {
+        cards.forEach((card) => {
+            let currentDeg = parseInt(card.getAttribute("image-shown"));
+            let newDeg = -180 - currentDeg;
+
+            card.style.transform = `rotateX(${newDeg.toString()}deg)`;
+            card.setAttribute("image-shown", "0");
+            card.addEventListener("click", flipCard);
+            if (seconds === 5000) setUpTimer();
+        });
+    }, seconds);
+
+
+    // let currentDeg = parseInt(this.getAttribute("image-shown"));
+    // let newDeg = -180 + currentDeg;
+    // this.style.transform = `rotateX(${newDeg.toString()}deg)`;
+    // this.setAttribute("image-shown", newDeg.toString());
+    // localStorage.setItem("selectedCard", this.getAttribute("value"));
+}
+
+
+//------------------------------------------------------------------------------------------------------------------------
+
+//Ver que pasa si da click y la quiere guardar, es decir si previous es igual a la de ahora
+
+function flipCard() {
+    console.log("Ss");
+    const cards = document.querySelectorAll(".flip-card");
+    let cardsFlipped = 0;
+
+    cards.forEach(card => {
+        if (parseInt(card.getAttribute("image-shown")) % 360 !== 0) cardsFlipped += 1;
+    });
+
+    console.log(cardsFlipped);
+    //Si antes había un nº par 0,2,3 quiere decir que estamos en una nueva
+    //tanda, por lo que guardamos la dejamos a la vista a la espera de la segunda carta.
+    let newDeg = (-180 + parseInt(this.getAttribute("image-shown"))).toString();
+    this.style.transform = `rotateX(${newDeg}deg)`;
+    this.setAttribute("image-shown", newDeg.toString());
+
+    if (cardsFlipped % 2 === 0) {
+        let cardClasses = this.getAttribute("class").split(" ");
+        localStorage.setItem("selectedCard", `${cardClasses[1]} ${cardClasses[2]}`);
+    } else {
+
+        if (this.getAttribute("class").split(" ")[1] === localStorage.getItem("selectedCard").split(" ")[0]) {
+            const equalCards = document.querySelectorAll(`.${localStorage.getItem("selectedCard").split(" ")[0]}`);
+            equalCards.forEach(card => (card.removeEventListener("click", flipCard)));
+            localStorage.removeItem("selectedCard");
+        } else {
+            let hidePairOfCards = setTimeout(() => {
+                let = newDeg;
+                newDeg = (-180 + parseInt(this.getAttribute("image-shown"))).toString();
+                this.style.transform = `rotateX(${newDeg}deg)`;
+                this.setAttribute("image-shown", newDeg);
+                //CUIDAR QUE SEA JUSTO LA QUE QUEREMOS QUITAR!! PQ HAY DOS IGUALES Y COGE LA QUE HAY ANTES!!
+                const previousCard = document.querySelector(`.${localStorage.getItem("selectedCard").split(" ")[0]}.${localStorage.getItem("selectedCard").split(" ")[1]}`);
+                newDeg = (-180 + parseInt(previousCard.getAttribute("image-shown"))).toString();
+                previousCard.style.transform = `rotateX(${newDeg}deg)`;
+            }, 1500);
+        }
+    }
+
+
+    // } else { // QUITAR Y HACER QUE SE ENSEÑE 3 SEGUNDOS AL ARRANCAR LA PÁGINA
+    // console.log(this.hasAttribute("image-shown"));
+    // let currentDeg = parseInt(this.getAttribute("image-shown"));
+    // let newDeg = -180 + currentDeg;
+    // this.style.transform = `rotateX(${newDeg.toString()}deg)`;
+    // this.setAttribute("image-shown", newDeg.toString());
+    // localStorage.setItem("selectedCard", this.getAttribute("value"));
+    //}
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+function cancelBtnClicked() {
+    changeSection(".cards-game-section", ".game-settings-section");
+}
+//------------------------------------------------------------------------------------------------------------------------
+function setUpTimer() {
+    let counter = 89;
+    const pTimerCards = document.querySelector(".timer-cards");
+    pTimerCards.innerText = "1:30";
+    let timerCards = setInterval(() => {
+        if (counter >= 0) {
+            let min = Math.trunc(counter / 60);
+            let sec = counter-- % 60;
+            if (sec > 9) pTimerCards.innerText = `${min}:${sec}`;
+            else pTimerCards.innerText = `${min}:0${sec}`;
+
+        } else {
+            stopInterval(timerCards);
+        }
+    }, 1000);
+}
+
+function stopInterval(interval) {
+    clearInterval(interval);
+}
+//------------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Called from gameModeClick(), after clicking in a game mode
+ */
+function startBtnClicked() {
+    setCardGame();
+    changeSection(".game-settings-section", ".cards-game-section");
+}
+//------------------------------------------------------------------------------------------------------------------------
+
+function showScoreBtnClicked() {
+    //Add new section of the users score so that it can be changes
+    setUsersScore();
+    changeSection(".game-settings-section", ".users-score-section");
+    const backBtn = document.querySelector(".back-btn");
+    backBtn.addEventListener("click", backBtnClicked);
+}
+//------------------------------------------------------------------------------------------------------------------------
+function backBtnClicked() {
+    changeSection(".users-score-section", ".game-settings-section");
+}
+//------------------------------------------------------------------------------------------------------------------------
+function gameModeClicked() {
+    const startBtn = document.querySelector(".start-game-btn");
+    const modeSelected = document.querySelectorAll(".input-game-mode");
+    const inputUsername = document.querySelector("#username");
+    for (mode of modeSelected) {
+        if (mode.checked) {
+            localStorage.setItem("gameMode", mode.getAttribute("id"));
+            if (inputUsername.value !== "" && inputUsername.value.length > 2) {
+                startBtn.disabled = false;
+
+                break;
+            }
+        } else startBtn.disabled = true;
+    }
+
+}
+//------------------------------------------------------------------------------------------------------------------------
+function userEntered() {
+    const startBtn = document.querySelector(".start-game-btn");
+    const modeSelected = document.querySelectorAll(".input-game-mode");
+    const inputUsername = document.querySelector("#username");
+    localStorage.setItem("username", inputUsername.value);
+    for (mode of modeSelected) {
+        if (mode.checked && inputUsername.value !== "" && inputUsername.value.length > 2) {
+            startBtn.disabled = false;
+            //Now, we add an EventListener to the button
+            startBtn.addEventListener("click", startBtnClicked);
+            break;
+        } else startBtn.disabled = true;
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+function changeSection(selectorPrevious, selectorNext) {
+    const showUsersBtn = document.querySelector(".users-score-btn");
+    const gameSS = document.querySelector(".game-settings-section");
+
+    const userSection = document.querySelector(".users-score-section");
+    //When going from first section to the card one when we are on the desktop
+    // since in that instance both sections are showed and the selector previous is just the first one.
+    if (selectorPrevious === ".game-settings-section" && userSection !== null) {
+        if (userSection.classList.contains("section-display")) userSection.classList.remove("section-display");
+    } else if (selectorPrevious === ".cards-game-section" && getComputedStyle(showUsersBtn).display === "none") {
+        userSection.classList.add("section-display");
+    }
+    const previous = document.querySelector(selectorPrevious);
+    const next = document.querySelector(selectorNext);
+    previous.classList.remove("section-display");
+    next.classList.add("section-display");
+
+}
 
 //------------------------------------------------------------------------------------------------------------------------
 /**
@@ -218,20 +555,5 @@ function orderArrayOfObjects(arrayReceived, indexParamCompared) {
 
 
 
-const cards = document.querySelectorAll(".flip-card");
-cards.forEach(card => card.addEventListener("click", flipCard));
 
-function flipCard() {
-    if (!this.hasAttribute("imageShown")) {
-        console.log("llego");
-        this.style.transform = "rotateX(-180deg)";
-        this.setAttribute("imageShown", "-180");
-        console.log("180");
-    } else {
-        let currentDeg = parseInt(this.getAttribute("imageShown"));
-        let newDeg = -180 + currentDeg;
-        console.log(newDeg);
-        this.style.transform = `rotateX(${newDeg.toString()}deg)`;
-        this.setAttribute("imageShown", newDeg.toString());
-    }
-}
+
